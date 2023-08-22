@@ -1,0 +1,1 @@
+create table hero (city varchar(255), name varchar(255) PRIMARY KEY , universum varchar(255))
