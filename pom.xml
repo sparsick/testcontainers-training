@@ -10,7 +10,7 @@
     </parent>
 
     <groupId>com.github.sparsick.testcontainers.training.hero</groupId>
-    <artifactId>testcontainers/training</artifactId>
+    <artifactId>testcontainers-training</artifactId>
     <version>1.0.0-SNAPSHOT</version>
 
     <properties>
