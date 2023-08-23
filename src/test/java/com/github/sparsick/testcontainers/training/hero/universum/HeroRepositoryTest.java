@@ -1,25 +1,16 @@
 package com.github.sparsick.testcontainers.training.hero.universum;
 
 import com.zaxxer.hikari.HikariDataSource;
-import liquibase.Liquibase;
-import liquibase.database.Database;
-import liquibase.database.DatabaseFactory;
-import liquibase.database.jvm.JdbcConnection;
-import liquibase.exception.DatabaseException;
 import liquibase.exception.LiquibaseException;
-import liquibase.resource.ClassLoaderResourceAccessor;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.jdbc.core.JdbcTemplate;
 
-import javax.sql.DataSource;
-
 import java.sql.SQLException;
 import java.util.Collection;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 class HeroRepositoryTest {
 
@@ -28,15 +19,9 @@ class HeroRepositoryTest {
     private JdbcTemplate jdbcTemplate;
 
     @BeforeEach
-    void setup() throws SQLException, LiquibaseException {
+    void setup() {
         var dataSource = new HikariDataSource();
-        dataSource.setJdbcUrl("jdbc:h2:mem:testdb");
-        dataSource.setUsername("sa");
-        dataSource.setPassword("password");
-        Database database = DatabaseFactory.getInstance().findCorrectDatabaseImplementation(new JdbcConnection(dataSource.getConnection()));
-        Liquibase liquibase = new liquibase.Liquibase("db/changelog/initDB.sql", new ClassLoaderResourceAccessor(), database);
-        liquibase.update();
-
+        dataSource.setJdbcUrl("jdbc:tc:postgresql:9.6.8:///hero?TC_INITSCRIPT=db/changelog/initDB.sql");
         jdbcTemplate = new JdbcTemplate(dataSource);
 
         repositoryUnderTest = new HeroRepository(dataSource);
