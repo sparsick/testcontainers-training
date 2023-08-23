@@ -1,13 +1,13 @@
 # Testcontainers Training
 
-![Build Status](https://github.com/sparsick/socrates23-testcontainers-training/workflows/MavenBuild/badge.svg)
-
-Spring Boot Demo Application
+![Build Status](https://github.com/sparsick/testcontainers-training/workflows/MavenBuild/badge.svg)
 
 ```
 mvn clean install
 mvn spring-boot:run
 ```
+
+Every branch shows some refactoring steps, which improve your dabase based tests.
 
 ## Helpful links
 
@@ -31,3 +31,9 @@ mvn spring-boot:run
 
 - https://java.testcontainers.org/test_framework_integration/manual_lifecycle_control/#singleton-containers
 - https://docs.spring.io/spring-boot/docs/current/reference/html/application-properties.html#application-properties.data-migration.spring.liquibase.enabled
+
+### Testcontainers and Selemium
+
+- https://blog.sandra-parsick.de/2022/11/21/using-testcontainers-selenium-in-spring-boot-tests/
+- https://java.testcontainers.org/modules/webdriver_containers/
+- 
