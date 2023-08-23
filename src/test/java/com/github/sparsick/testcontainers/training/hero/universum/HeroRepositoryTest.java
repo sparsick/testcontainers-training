@@ -1,26 +1,18 @@
 package com.github.sparsick.testcontainers.training.hero.universum;
 
 import com.zaxxer.hikari.HikariDataSource;
+import liquibase.exception.LiquibaseException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.testcontainers.containers.PostgreSQLContainer;
-import org.testcontainers.ext.ScriptUtils;
-import org.testcontainers.jdbc.JdbcDatabaseDelegate;
-import org.testcontainers.junit.jupiter.Container;
-import org.testcontainers.junit.jupiter.Testcontainers;
-import org.testcontainers.utility.DockerImageName;
 
+import java.sql.SQLException;
 import java.util.Collection;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@Testcontainers
 class HeroRepositoryTest {
-
-    @Container
-    private PostgreSQLContainer database = new PostgreSQLContainer(DockerImageName.parse("postgres:15.4"));
 
     private HeroRepository repositoryUnderTest;
 
@@ -28,12 +20,8 @@ class HeroRepositoryTest {
 
     @BeforeEach
     void setup() {
-        ScriptUtils.runInitScript(new JdbcDatabaseDelegate(database, ""), "db/changelog/initDB.sql" );
-
         var dataSource = new HikariDataSource();
-        dataSource.setUsername(database.getUsername());
-        dataSource.setPassword(database.getPassword());
-        dataSource.setJdbcUrl(database.getJdbcUrl());
+        dataSource.setJdbcUrl("jdbc:tc:postgresql:9.6.8:///hero?TC_INITSCRIPT=db/changelog/initDB.sql");
         jdbcTemplate = new JdbcTemplate(dataSource);
 
         repositoryUnderTest = new HeroRepository(dataSource);
