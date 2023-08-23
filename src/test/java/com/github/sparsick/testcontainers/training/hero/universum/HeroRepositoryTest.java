@@ -1,26 +1,20 @@
 package com.github.sparsick.testcontainers.training.hero.universum;
 
+import com.github.sparsick.testcontainers.training.hero.DatabaseSetup;
 import com.zaxxer.hikari.HikariDataSource;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.ext.ScriptUtils;
 import org.testcontainers.jdbc.JdbcDatabaseDelegate;
-import org.testcontainers.junit.jupiter.Container;
-import org.testcontainers.junit.jupiter.Testcontainers;
-import org.testcontainers.utility.DockerImageName;
 
 import java.util.Collection;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@Testcontainers
-class HeroRepositoryTest {
+class HeroRepositoryTest extends DatabaseSetup {
 
-    @Container
-    private PostgreSQLContainer database = new PostgreSQLContainer(DockerImageName.parse("postgres:15.4"));
 
     private HeroRepository repositoryUnderTest;
 
@@ -28,12 +22,10 @@ class HeroRepositoryTest {
 
     @BeforeEach
     void setup() {
-        ScriptUtils.runInitScript(new JdbcDatabaseDelegate(database, ""), "db/changelog/initDB.sql" );
-
         var dataSource = new HikariDataSource();
-        dataSource.setUsername(database.getUsername());
-        dataSource.setPassword(database.getPassword());
-        dataSource.setJdbcUrl(database.getJdbcUrl());
+        dataSource.setUsername(DATABASE.getUsername());
+        dataSource.setPassword(DATABASE.getPassword());
+        dataSource.setJdbcUrl(DATABASE.getJdbcUrl());
         jdbcTemplate = new JdbcTemplate(dataSource);
 
         repositoryUnderTest = new HeroRepository(dataSource);

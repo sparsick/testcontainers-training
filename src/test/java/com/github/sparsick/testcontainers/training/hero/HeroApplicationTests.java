@@ -12,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.ui.ExtendedModelMap;
 import org.springframework.ui.Model;
 import org.testcontainers.containers.PostgreSQLContainer;
@@ -25,12 +27,7 @@ import java.util.Collection;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
-@Testcontainers
-public class HeroApplicationTests {
-
-	@Container
-	@ServiceConnection
-	private static PostgreSQLContainer database = new PostgreSQLContainer(DockerImageName.parse("postgres:15.4"));
+public class HeroApplicationTests extends DatabaseSetup{
 
 	@Autowired
 	private DataSource dataSource;
@@ -72,12 +69,13 @@ public class HeroApplicationTests {
 		assertThat(heros).hasSize(1);
 	}
 
-// 	before Spring 3.1
-//	@DynamicPropertySource
-//	static void databaseProperties(DynamicPropertyRegistry registry) {
-//		registry.add("spring.datasource.username", () -> database.getUsername());
-//		registry.add("spring.datasource.password", () -> database.getPassword());
-//		registry.add("spring.datasource.url", () -> database.getJdbcUrl());
-//	}
+
+	@DynamicPropertySource
+	static void databaseProperties(DynamicPropertyRegistry registry) {
+		registry.add("spring.datasource.username", () -> DATABASE.getUsername());
+		registry.add("spring.datasource.password", () -> DATABASE.getPassword());
+		registry.add("spring.datasource.url", () -> DATABASE.getJdbcUrl());
+
+	}
 
 }
